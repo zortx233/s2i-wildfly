@@ -173,6 +173,23 @@
                         <flush-strategy>IdleConnections</flush-strategy>
                     </pool>
                 </datasource>
+                <datasource jndi-name="java:jboss/datasources/${env.OPENSHIFT_SQLSERVER_DATASOURCE}" enabled="${sqlserver.enabled}" use-java-context="true" pool-name="${env.OPENSHIFT_SQLSERVER_DATASOURCE}" use-ccm="true">
+                    <connection-url>jdbc:sqlserver://${env.OPENSHIFT_SQLSERVER_DB_HOST}:${env.OPENSHIFT_SQLSERVER_DB_PORT};DatabaseName=${env.OPENSHIFT_SQLSERVER_DB_NAME}</connection-url>
+                    <driver>sqlserver</driver>
+                    <pool>
+                        <min-pool-size>0</min-pool-size>
+                        <max-pool-size>30</max-pool-size>
+                    </pool>
+                    <security>
+                        <user-name>${env.OPENSHIFT_SQLSERVER_DB_USERNAME}</user-name>
+                        <password>${env.OPENSHIFT_SQLSERVER_DB_PASSWORD}</password>
+                    </security>
+                    <validation>
+                        <check-valid-connection-sql>SELECT 1</check-valid-connection-sql>
+                        <background-validation>true</background-validation>
+                        <background-validation-millis>60000</background-validation-millis>
+                    </validation>
+                </datasource>
                 <drivers>
                     <driver name="h2" module="com.h2database.h2">
                         <xa-datasource-class>org.h2.jdbcx.JdbcDataSource</xa-datasource-class>
@@ -182,6 +199,9 @@
                     </driver>
                     <driver name="postgresql" module="org.postgresql.jdbc">
                         <xa-datasource-class>org.postgresql.xa.PGXADataSource</xa-datasource-class>
+                    </driver>
+                    <driver name="sqlserver" module="com.microsoft.sqlserver.jdbc">
+                        <xa-datasource-class>com.microsoft.sqlserver.jdbc.SQLServerXADataSource</xa-datasource-class>
                     </driver>
                 </drivers>
             </datasources>
